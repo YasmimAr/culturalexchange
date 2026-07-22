@@ -10,8 +10,7 @@ class DefineStatus(StrEnum):
     early = "early"
     canceled = "canceled"
 
-class Camp(SQLModel, table=True):
-    id: int | None = Field(default=None, primary_key=True)
+class CampBase(SQLModel):
     name: str = Field(index=True)
     country: str = Field(index=True)
     province: str
@@ -28,5 +27,17 @@ class Camp(SQLModel, table=True):
     currency: str
     description: str
     status: DefineStatus = Field(index=True)
-    createdAt: date = Field(default_factory=date.today)
     hostId: int = Field(foreign_key="user.id")
+
+class Camp(CampBase, table=True):
+    id: int | None = Field(default=None, primary_key=True)
+    createdAt: date = Field(default_factory=date.today)
+
+class CampCreate(CampBase):
+    pass
+
+class CampPublic(CampBase):
+    id: int
+
+class CampUpdate(SQLModel):
+    pass

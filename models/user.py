@@ -8,13 +8,24 @@ class DefineRole(StrEnum):
     assistant = "assistant"
     participant = "participant"
 
-class User(SQLModel, table=True):
-    id: int | None = Field(default=None, primary_key=True)
+class UserBase(SQLModel):
     name: str = Field(index=True)
-    passwordHash: str
     email: str = Field(index=True, unique=True)
     role: DefineRole = Field(index=True)
     dateOfBirth: date
     country: str
     lions: str
     language: str
+
+class User(UserBase, table=True):
+    id: int | None = Field(default=None, primary_key=True)
+    passwordHash: str
+
+class UserCreate(UserBase):
+    password: str
+
+class UserUpdate(UserBase):
+    pass
+
+class UserPublic(UserBase):
+    id: int

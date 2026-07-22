@@ -9,11 +9,22 @@ class DefineStatus(StrEnum):
     rejected = "rejected"
     canceled = "canceled"
 
-class Candidacy(SQLModel, table=True):
-    id: int | None = Field(default=None, primary_key=True)
-    userId: int = Field(foreign_key="user.id")
+class CandidacyBase(SQLModel):
     campId: int = Field(foreign_key="camp.id")
-    status: DefineStatus = Field(default=DefineStatus.pending)
     message: str
-    createdAt: date = Field(default_factory=date.today)
     priority: int
+
+class Candidacy(CandidacyBase, table=True):
+    id: int | None = Field(default=None, primary_key=True)
+    createdAt: date = Field(default_factory=date.today)
+    status: DefineStatus = Field(default=DefineStatus.pending)
+    userId: int = Field(foreign_key="user.id")
+
+class CandidacyCreate(CandidacyBase):
+    pass
+
+class CandidacyUpdate(CandidacyBase):
+    pass
+
+class CandidacyPublic(CandidacyBase):
+    id: int
