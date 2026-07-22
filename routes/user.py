@@ -8,6 +8,7 @@ from sqlmodel import Session
 router = APIRouter()
 
 @router.post("/user/", response_model=UserPublic)
+
 def create_user(*, user: UserCreate, session: Session = Depends(get_session)):
     hashed = get_password_hash(user.password)
 

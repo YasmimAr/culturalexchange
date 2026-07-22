@@ -7,6 +7,7 @@ from sqlmodel import Session
 router = APIRouter()
 
 @router.post("/candidacy/", response_model=CandidacyPublic)
+
 def create_candidacy(*, candidacy: CandidacyCreate, session: Session = Depends(get_session)):
     db_candidacy = Candidacy.model_validate(candidacy)
     session.add(db_candidacy)
