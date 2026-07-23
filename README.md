@@ -76,8 +76,8 @@ Interactive API documentation (Swagger UI) is auto-generated at `http://127.0.0.
 - [x] Data models for User, Camp, and Candidacy
 - [x] Database setup and table creation
 - [x] User creation endpoint with password hashing
-- [ ] Camp and Candidacy creation endpoints
-- [ ] List and retrieve endpoints (GET)
+- [x] Camp and Candidacy creation endpoints
+- [x] List and retrieve endpoints (GET)
 - [ ] Authentication and login
 - [ ] Enforce business rules in the application layer
 - [ ] Frontend interface
