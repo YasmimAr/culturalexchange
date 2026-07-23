@@ -28,6 +28,10 @@ A user can publish many camps (one-to-many), and the `Candidacy` table resolves 
 
 Passwords are never stored in plain text — they are hashed with bcrypt, and the API never returns password data in its responses.
 
+![Data model](docs/data-model.png)
+
+*Class diagram: the three core entities, their fields, and the relationships between them.*
+
 ## Getting Started
 
 ### Prerequisites
@@ -77,7 +81,7 @@ Interactive API documentation (Swagger UI) is auto-generated at `http://127.0.0.
 - [x] Database setup and table creation
 - [x] User creation endpoint with password hashing
 - [x] Camp and Candidacy creation endpoints
-- [x] List and retrieve endpoints (GET)
+- [x] Full CRUD endpoints for all entities
 - [ ] Authentication and login
 - [ ] Enforce business rules in the application layer
 - [ ] Frontend interface
