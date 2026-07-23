@@ -24,8 +24,14 @@ class User(UserBase, table=True):
 class UserCreate(UserBase):
     password: str
 
-class UserUpdate(UserBase):
-    pass
+class UserUpdate(SQLModel):
+    name: str | None = None
+    email: str | None = None
+    role: DefineRole | None = None
+    dateOfBirth: date | None = None
+    country: str | None = None
+    lions: str | None = None
+    language: str | None = None
 
 class UserPublic(UserBase):
     id: int

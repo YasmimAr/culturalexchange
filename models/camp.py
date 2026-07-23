@@ -36,8 +36,25 @@ class Camp(CampBase, table=True):
 class CampCreate(CampBase):
     pass
 
+class CampUpdate(SQLModel):
+    name: str | None = None
+    country: str | None = None
+    province: str | None = None
+    city: str | None = None
+    website: str | None = None
+    lciApprove: date | None = None
+    applicationDeadLine: date | None = None
+    campStartDate: date | None = None
+    campEndDate: date | None = None
+    ageMin: int | None = None
+    ageMax: int | None = None
+    participants: int | None = None
+    fee: Decimal | None = None
+    currency: str | None = None
+    description: str | None = None
+    status: DefineStatus | None = None
+    hostId: int | None = None
+
 class CampPublic(CampBase):
     id: int
 
-class CampUpdate(SQLModel):
-    pass
