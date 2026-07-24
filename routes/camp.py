@@ -42,8 +42,16 @@ def read_camp(*, session: Session = Depends(get_session), camp_id: int):
     return get_camp_or_404(session, camp_id)
 
 @router.patch("/camp/{camp_id}", response_model=CampPublic)
-def update_camp(*, session: Session = Depends(get_session), camp_id: int, camp: CampUpdate):
+def update_camp(
+    *,
+    session: Session = Depends(get_session),
+    current_user: User = Depends(get_current_user),
+    camp_id: int,
+    camp: CampUpdate,
+):
     db_camp = get_camp_or_404(session, camp_id)
+    if db_camp.hostId != current_user.id:
+        raise HTTPException(status_code=403, detail="Not allowed to update this camp")
     camp_data = camp.model_dump(exclude_unset=True)
     db_camp.sqlmodel_update(camp_data)
     session.add(db_camp)
@@ -52,8 +60,15 @@ def update_camp(*, session: Session = Depends(get_session), camp_id: int, camp: 
     return db_camp
 
 @router.delete("/camp/{camp_id}")
-def delete_camp(*, session: Session = Depends(get_session), camp_id: int):
+def delete_camp(
+    *,
+    session: Session = Depends(get_session),
+    current_user: User = Depends(get_current_user),
+    camp_id: int,
+):
     db_camp = get_camp_or_404(session, camp_id)
+    if db_camp.hostId != current_user.id:
+        raise HTTPException(status_code=403, detail="Not allowed to delete this camp")
     session.delete(db_camp)
     session.commit()
     return {"ok": True}

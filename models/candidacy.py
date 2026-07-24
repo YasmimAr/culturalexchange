@@ -27,9 +27,11 @@ class CandidacyUpdate(SQLModel):
     campId: int | None = None
     message: str | None = None
     priority: int | None = None
-    status: DefineStatus | None = None
 
 class CandidacyPublic(CandidacyBase):
     id: int
     status: DefineStatus
     userId: int
+
+class CandidacyStatusUpdate(SQLModel):
+    status: DefineStatus

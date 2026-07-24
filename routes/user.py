@@ -1,5 +1,5 @@
 from database.database import get_session
-from services.auth import get_password_hash
+from services.auth import get_password_hash, get_current_user
 from models.user import User, UserCreate, UserPublic, UserUpdate
 
 from fastapi import APIRouter, Depends, HTTPException, Query
@@ -46,8 +46,16 @@ def read_user(*, session: Session = Depends(get_session), user_id: int):
     return get_user_or_404(session, user_id)
 
 @router.patch("/user/{user_id}", response_model=UserPublic)  
-def update_user(*, session: Session = Depends(get_session), user_id: int, user: UserUpdate):
+def update_user(
+    *,
+    session: Session = Depends(get_session),
+    current_user: User = Depends(get_current_user),
+    user_id: int,
+    user: UserUpdate,
+):
     db_user = get_user_or_404(session, user_id)
+    if user_id != current_user.id:
+        raise HTTPException(status_code=403, detail="Not allowed to update this user")
     user_data = user.model_dump(exclude_unset=True)
     db_user.sqlmodel_update(user_data)
     session.add(db_user)
@@ -56,8 +64,15 @@ def update_user(*, session: Session = Depends(get_session), user_id: int, user: 
     return db_user
 
 @router.delete("/user/{user_id}")
-def delete_user(*, session: Session = Depends(get_session), user_id: int):
+def delete_user(
+    *,
+    session: Session = Depends(get_session),
+    current_user: User = Depends(get_current_user),
+    user_id: int,
+):
     db_user = get_user_or_404(session, user_id)
+    if user_id != current_user.id:
+        raise HTTPException(status_code=403, detail="Not allowed to delete this user")
     session.delete(db_user)
     session.commit()
     return {"ok": True}
