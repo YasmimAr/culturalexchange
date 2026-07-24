@@ -1,8 +1,13 @@
 from models.user import User
 
 from datetime import datetime, timedelta, timezone
+from typing import Annotated
+from fastapi import Depends, HTTPException, status
 from sqlmodel import Session, select
 from dotenv import load_dotenv
+from jwt.exceptions import InvalidTokenError
+from fastapi.security import OAuth2PasswordBearer
+from database.database import get_session
 import bcrypt
 import os
 import jwt
@@ -43,3 +48,26 @@ def create_access_token(data: dict, expires_delta: timedelta | None = None):
     to_encode.update({"exp": expire})
     encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
     return encoded_jwt
+
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
+
+def get_current_user(
+        token: Annotated[str, Depends(oauth2_scheme)],
+        session: Session = Depends(get_session),
+) -> User:
+    credentials_exception = HTTPException(
+        status_code=status.HTTP_401_UNAUTHORIZED,
+        detail="Could not validate credentials",
+        headers={"WWW-Authenticate": "Bearer"}
+    )
+    try:
+        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        email = payload.get("sub")
+        if email is None:
+            raise credentials_exception
+    except InvalidTokenError:
+        raise credentials_exception
+    user = get_user_by_email(session, email)
+    if user is None:
+        raise credentials_exception
+    return user
