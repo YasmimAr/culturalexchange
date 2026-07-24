@@ -82,7 +82,7 @@ Interactive API documentation (Swagger UI) is auto-generated at `http://127.0.0.
 - [x] User creation endpoint with password hashing
 - [x] Camp and Candidacy creation endpoints
 - [x] Full CRUD endpoints for all entities
-- [ ] Authentication and login
+- [x] Authentication and login
 - [ ] Enforce business rules in the application layer
 - [ ] Frontend interface
 
