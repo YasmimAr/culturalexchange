@@ -27,11 +27,11 @@ class CampBase(SQLModel):
     currency: str
     description: str
     status: DefineStatus = Field(index=True)
-    hostId: int = Field(foreign_key="user.id")
 
 class Camp(CampBase, table=True):
     id: int | None = Field(default=None, primary_key=True)
     createdAt: date = Field(default_factory=date.today)
+    hostId: int = Field(foreign_key="user.id")
 
 class CampCreate(CampBase):
     pass
@@ -53,8 +53,7 @@ class CampUpdate(SQLModel):
     currency: str | None = None
     description: str | None = None
     status: DefineStatus | None = None
-    hostId: int | None = None
 
 class CampPublic(CampBase):
     id: int
-
+    hostId: int 

@@ -1,5 +1,7 @@
 from database.database import get_session
+from services.auth import get_current_user
 from models.camp import Camp, CampCreate, CampPublic, CampUpdate
+from models.user import User
 
 from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlmodel import Session, select
@@ -13,8 +15,13 @@ def get_camp_or_404(session: Session, camp_id: int) -> Camp:
     return camp
 
 @router.post("/camp/", response_model=CampPublic)
-def create_camp(*, camp: CampCreate, session: Session = Depends(get_session)):
-    db_camp = Camp.model_validate(camp)
+def create_camp(
+    *,
+    camp: CampCreate,
+    session: Session = Depends(get_session),
+    current_user: User = Depends(get_current_user),
+):
+    db_camp = Camp(**camp.model_dump(), hostId=current_user.id)
     session.add(db_camp)
     session.commit()
     session.refresh(db_camp)

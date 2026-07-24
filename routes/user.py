@@ -16,18 +16,16 @@ def get_user_or_404(session: Session, user_id: int) -> User:
 @router.post("/user/", response_model=UserPublic)
 def create_user(*, user: UserCreate, session: Session = Depends(get_session)):
     hashed = get_password_hash(user.password)
-
     db_user = User(
-    name=user.name,
-    email=user.email,
-    role=user.role,
-    dateOfBirth=user.dateOfBirth,
-    country=user.country,
-    lions=user.lions,
-    language=user.language,
-    passwordHash=hashed,
+        name=user.name,
+        email=user.email,
+        role=user.role,
+        dateOfBirth=user.dateOfBirth,
+        country=user.country,
+        lions=user.lions,
+        language=user.language,
+        passwordHash=hashed,
     )
-
     session.add(db_user)
     session.commit()
     session.refresh(db_user)

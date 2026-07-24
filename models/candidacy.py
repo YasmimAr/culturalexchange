@@ -13,13 +13,12 @@ class CandidacyBase(SQLModel):
     campId: int = Field(foreign_key="camp.id")
     message: str
     priority: int
-    userId: int = Field(foreign_key="user.id")
 
 class Candidacy(CandidacyBase, table=True):
     id: int | None = Field(default=None, primary_key=True)
     createdAt: date = Field(default_factory=date.today)
     status: DefineStatus = Field(default=DefineStatus.pending)
-    #userId: int = Field(foreign_key="user.id")
+    userId: int = Field(foreign_key="user.id")
 
 class CandidacyCreate(CandidacyBase):
     pass
@@ -32,3 +31,5 @@ class CandidacyUpdate(SQLModel):
 
 class CandidacyPublic(CandidacyBase):
     id: int
+    status: DefineStatus
+    userId: int
