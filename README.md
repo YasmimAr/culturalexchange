@@ -42,51 +42,6 @@ Passwords are never stored in plain text — they are hashed with bcrypt, and th
 
 *Class diagram: the three core entities, their fields, and the relationships between them.*
 
-# CulturalExchange
-
-A REST API platform for managing youth camp exchange opportunities.
-
-## About
-
-CulturalExchange was born from a real problem. In youth exchange programs, camp opportunities — dates, host countries, age requirements, fees, contacts — are often shared as PDF files scattered across group chats. Finding a camp that fits (by country, date, or language) means digging through documents by hand, and applying is just as informal.
-
-This project replaces that chaos with a structured system: host organizers publish exchange opportunities, and members can search and apply to them in an organized way. It started as a learning project to build a strong backend foundation from scratch — data modeling, a relational database, authentication, and a REST API — while solving a problem I've experienced firsthand through volunteer work.
-
-## Tech Stack
-
-- **Python**
-- **FastAPI** — web framework for building the REST API
-- **SQLModel** — ORM layer (SQLAlchemy + Pydantic) for models and schemas
-- **SQLite / PostgreSQL** — SQLite for local development, PostgreSQL in production (the ORM makes switching seamless)
-- **bcrypt** — password hashing
-- **PyJWT** — JSON Web Tokens for authentication
-
-## Features
-
-- Full CRUD for Users, Camps, and Candidacies
-- JWT-based authentication with a login endpoint and protected routes
-- Ownership authorization — users can only edit or delete their own resources
-- Role-based access — only hosts can create camps
-- Business rules enforced in the application layer (see below)
-- Search filters for camps (by country, language, minimum start date, and age)
-- Auto-generated interactive API documentation (Swagger UI)
-
-## Data Model
-
-The system is built around three core entities and their relationships:
-
-- **User** — a member, host, or assistant. Publishes camps (as a host) and applies to them (as a member).
-- **Camp** — an exchange opportunity, with location, dates, age range, fee, language, and a host.
-- **Candidacy** — links a user to a camp they've applied to, with a priority and status.
-
-A user can publish many camps (one-to-many), and the `Candidacy` table resolves the many-to-many relationship between users and camps: a user can apply to several camps, and a camp can receive several applicants.
-
-Passwords are never stored in plain text — they are hashed with bcrypt, and the API never returns password data in its responses.
-
-![Data model](docs/data-model.png)
-
-*Class diagram: the three core entities, their fields, and the relationships between them.*
-
 ## Authentication
 
 Authentication uses OAuth2 with JWT tokens:
