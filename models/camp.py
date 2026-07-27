@@ -26,6 +26,7 @@ class CampBase(SQLModel):
     fee: Decimal = Field(default=0, max_digits=7, decimal_places=2, index=True)
     currency: str
     description: str
+    language: str | None = Field(default=None, index=True)
     status: DefineStatus = Field(index=True)
 
 class Camp(CampBase, table=True):

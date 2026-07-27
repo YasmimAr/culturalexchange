@@ -3,6 +3,7 @@ from services.auth import get_current_user
 from models.camp import Camp, CampCreate, CampPublic, CampUpdate
 from models.user import User, DefineRole
 
+from datetime import date
 from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlmodel import Session, select
 
@@ -35,9 +36,23 @@ def read_camps(
     *,
     session: Session = Depends(get_session),
     offset: int = 0,
+    country: str | None = None,
+    language: str | None = None,
+    start_after: date | None = None,
+    age: int | None = None,
     limit: int = Query(default=100, le=100),
 ):
-    camps = session.exec(select(Camp).offset(offset).limit(limit)).all()
+    query = select(Camp)
+    if country:
+        query = query.where(Camp.country == country)
+    if language:
+        query = query.where(Camp.language == language)
+    if start_after:
+        query = query.where(Camp.campStartDate >= start_after)
+    if age:
+        query = query.where(Camp.ageMin <= age, Camp.ageMax >= age)
+
+    camps = session.exec(query.offset(offset).limit(limit)).all()
     return camps
 
 @router.get("/camp/{camp_id}", response_model=CampPublic)
