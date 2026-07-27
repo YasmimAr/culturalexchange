@@ -3,8 +3,13 @@ from routes.camp import router as camp_router
 from routes.candidacy import router as candidacy_router
 from routes.user import router as user_router
 from routes.auth import router as auth_router
+from database.database import create_db_and_tables
 
 app = FastAPI()
+
+@app.on_event("startup")
+def on_startup():
+    create_db_and_tables()
 
 app.include_router(camp_router)
 app.include_router(candidacy_router)
