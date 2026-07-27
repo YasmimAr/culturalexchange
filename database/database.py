@@ -7,6 +7,8 @@ from sqlmodel import Session
 from sqlmodel import SQLModel, create_engine
 
 DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:///database.db")
+if DATABASE_URL.startswith("postgresql://"):
+    DATABASE_URL = DATABASE_URL.replace("postgresql://", "postgresql+psycopg://", 1)
 engine = create_engine(DATABASE_URL, echo=True)
 
 def create_db_and_tables():
