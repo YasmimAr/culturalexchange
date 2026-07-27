@@ -1,7 +1,7 @@
 from database.database import get_session
 from services.auth import get_current_user
 from models.camp import Camp, CampCreate, CampPublic, CampUpdate
-from models.user import User
+from models.user import User, DefineRole
 
 from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlmodel import Session, select
@@ -21,6 +21,9 @@ def create_camp(
     session: Session = Depends(get_session),
     current_user: User = Depends(get_current_user),
 ):
+    if current_user.role != DefineRole.host:
+        raise HTTPException(status_code=403, detail="Only hosts can create camps")
+
     db_camp = Camp(**camp.model_dump(), hostId=current_user.id)
     session.add(db_camp)
     session.commit()

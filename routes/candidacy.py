@@ -22,6 +22,29 @@ def create_candidacy(
     session: Session = Depends(get_session),
     current_user: User = Depends(get_current_user)
 ):
+    db_camp = get_camp_or_404(session, candidacy.campId)
+    if db_camp.hostId == current_user.id:
+        raise HTTPException(status_code=403, detail="Host cannot apply to their own camp")
+
+    existing = session.exec(
+        select(Candidacy).where(
+            Candidacy.campId == candidacy.campId,
+            Candidacy.userId == current_user.id
+        )
+    ).first()
+    if existing:
+        raise HTTPException(status_code=400, detail="You already applied to this camp")
+
+    user_candidacies = session.exec(
+        select(Candidacy).where(Candidacy.userId == current_user.id)
+    ).all()
+    if len(user_candidacies) >= 3:
+        raise HTTPException(status_code=400, detail="Maximum of 3 candidacies reached")
+
+    for c in user_candidacies:
+        if c.priority == candidacy.priority:
+            raise HTTPException(status_code=400, detail="Priority already used")
+
     db_candidacy = Candidacy(**candidacy.model_dump(), userId=current_user.id)
     session.add(db_candidacy)
     session.commit()

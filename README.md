@@ -85,6 +85,7 @@ Interactive API documentation (Swagger UI) is auto-generated at `http://127.0.0.
 - [x] Authentication and login
 - [ ] Enforce business rules in the application layer
 - [ ] Frontend interface
+- [ ] Assistant assignment (many assistants per camp, can edit assigned camps)
 
 ## License
 
