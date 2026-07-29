@@ -27,7 +27,6 @@ class UserCreate(UserBase):
 class UserUpdate(SQLModel):
     name: str | None = None
     email: str | None = None
-    role: DefineRole | None = None
     dateOfBirth: date | None = None
     country: str | None = None
     lions: str | None = None

@@ -102,8 +102,15 @@ def update_candidacy_status(
     return db_candidacy
 
 @router.delete("/candidacy/{candidacy_id}")
-def delete_candidacy(*, session: Session = Depends(get_session), candidacy_id: int):
+def delete_candidacy(
+    *,
+    session: Session = Depends(get_session),
+    current_user: User = Depends(get_current_user),
+    candidacy_id: int,
+):
     db_candidacy = get_candidacy_or_404(session, candidacy_id)
+    if db_candidacy.userId != current_user.id:
+        raise HTTPException(status_code=403, detail="Not allowed to delete this candidacy")
     session.delete(db_candidacy)
     session.commit()
     return {"ok": True}
